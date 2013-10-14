@@ -1,4 +1,6 @@
-#pragma once
+#ifndef GRAPH_H
+#define GRAPH_H
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -7,16 +9,15 @@ typedef unsigned int uint;
 
 struct weighted_vertex {
 public:
-	weighted_vertex(uint vertex, int weight);
+	weighted_vertex(uint vertex, int weight) {
+		this->vertex = vertex;
+		this->weight = weight;
+	}
 
 	//TODO: incapsulate these two fields
 	uint vertex;
 	int weight;
 };
-
-bool operator<(const weighted_vertex& first, const weighted_vertex& second) {
-	return first.weight < second.weight;
-}
 
 struct adjacency_list_node {
 public:
@@ -40,7 +41,7 @@ public:
 	static graph* construct_from_file(char const *filename);
 	void add_edge(uint from, uint to, int weight);
 	void print(std::ostream& output);
-	std::vector<weighted_vertex>* get_adjacent_nodes(uint vertex);
+	std::vector<weighted_vertex> get_adjacent_nodes(uint vertex);
 	~graph();
 private:
 	graph(graph& other);
@@ -48,3 +49,5 @@ private:
 	uint vertices;
 	adjacency_list_node** adjacency_list;
 };
+
+#endif

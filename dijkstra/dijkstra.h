@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DIJKSTRA_H
+#define DIJKSTRA_H
+
 #include "../graph/graph.h"
 #include <queue>
 
@@ -8,5 +10,6 @@ public:
 	int shortest_path(uint from, uint to);
 	~dijkstra();
 private:
-	graph* graph1;
 };
+
+#endif
