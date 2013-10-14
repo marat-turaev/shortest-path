@@ -8,6 +8,6 @@ dijkstra.o:
 program: main.o graph.o dijkstra.o
 	g++ bin/main.o bin/graph.o bin/dijkstra.o -o bin/program
 clean:
-	rm -rf bin/
+	rm -f bin/*
 .PHONY:
 	clean

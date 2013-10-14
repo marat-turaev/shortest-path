@@ -1,5 +1,10 @@
 #include "graph.h"
 
+weighted_vertex::weighted_vertex(uint vertex, int weight) {
+	this->vertex = vertex;
+	this->weight = weight;
+}
+
 graph::graph(uint vertices): vertices(vertices) {
 	adjacency_list = new adjacency_list_node*[10];
 }
@@ -50,8 +55,9 @@ void graph::print(std::ostream& output) {
 	}
 }
 
-adjacency_list_node* graph::get_adjacent_nodes(uint vertex) {
-	return adjacency_list[vertex];
+std::vector<weighted_vertex>* graph::get_adjacent_nodes(uint vertex) {
+	// std::vector<weighted_vertex> *v = new std::vector<weighted_vertex>();
+	return 0;
 }
 
 graph::~graph() {

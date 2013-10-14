@@ -1,5 +1,6 @@
 #pragma once
 #include "../graph/graph.h"
+#include <queue>
 
 class dijkstra {
 public:
