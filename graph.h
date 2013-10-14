@@ -5,22 +5,40 @@
 
 typedef unsigned int uint;
 
-struct node {
+struct weighted_vertex {
 public:
-	node(uint vertex, int weight): vertex(vertex), weight(weight), next(0) {}
+	weighted_vertex(uint vertex, int weight) {
+		this->vertex = vertex;
+		this->weight = weight;
+	}
 	uint vertex;
 	int weight;
-	node* next;
+};
+
+struct adjacency_list_node {
+public:
+	adjacency_list_node(uint vertex, int weight) {
+		data = new weighted_vertex(vertex, weight);
+	}
+
+	~adjacency_list_node() {
+		delete data;
+	}
+	
+	uint vertex;
+	adjacency_list_node* next;
+	weighted_vertex *data;
 };
 
 class graph {
 public:
 	graph(uint vertices);
+	static graph* construct_from_file(char const *filename);
 	void add_edge(uint from, uint to, int weight);
 	void print(std::ostream& output);
-	static graph* construct_from_file(char const *filename);
+	adjacency_list_node* get_adjacent_nodes(uint vertex);
 	~graph();
 private:
 	uint vertices;
-	node** nodes;
+	adjacency_list_node** adjacency_list;
 };
