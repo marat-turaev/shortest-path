@@ -20,7 +20,7 @@ graph* graph::construct_from_file(char const *filename) {
 		}
 		file.close();
 	}
-
+	
 	return result;
 }
 

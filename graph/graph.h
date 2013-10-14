@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <fstream>
 
@@ -11,23 +10,30 @@ public:
 		this->vertex = vertex;
 		this->weight = weight;
 	}
+	
+	//TODO: incapsulate these two fields
 	uint vertex;
 	int weight;
 };
+
+bool operator<(const weighted_vertex& first, const weighted_vertex& second) {
+	return first.weight < second.weight;
+}
 
 struct adjacency_list_node {
 public:
 	adjacency_list_node(uint vertex, int weight) {
 		data = new weighted_vertex(vertex, weight);
 	}
-
 	~adjacency_list_node() {
 		delete data;
 	}
-	
-	uint vertex;
+
 	adjacency_list_node* next;
 	weighted_vertex *data;
+private:
+	adjacency_list_node(adjacency_list_node& other);
+	adjacency_list_node& operator=(adjacency_list_node& other);
 };
 
 class graph {
@@ -39,6 +45,8 @@ public:
 	adjacency_list_node* get_adjacent_nodes(uint vertex);
 	~graph();
 private:
+	graph(graph& other);
+	graph& operator=(graph& other);
 	uint vertices;
 	adjacency_list_node** adjacency_list;
 };
