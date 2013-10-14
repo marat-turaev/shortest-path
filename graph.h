@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
+
 typedef unsigned int uint;
 
 struct node {
@@ -16,6 +18,7 @@ public:
 	graph(uint vertices);
 	void add_edge(uint from, uint to, int weight);
 	void print(std::ostream& output);
+	static graph* construct_from_file(char const *filename);
 	~graph();
 private:
 	uint vertices;
