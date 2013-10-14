@@ -31,6 +31,8 @@ void graph::print(std::ostream& output) {
 }
 
 graph::~graph() {
+	for (int i = 0; i < vertices; ++i) {
+		delete nodes[i];
+	}
 	delete[] nodes;
-	//TODO: memory leak here.
 }
