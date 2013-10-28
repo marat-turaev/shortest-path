@@ -2,14 +2,29 @@
 #define DIJKSTRA_H
 
 #include "../graph/graph.h"
-#include <queue>
 
-class dijkstra {
+struct dijkstra_vertex {
 public:
-	dijkstra(graph *graph1);	
-	int shortest_path(uint from, uint to);
-	~dijkstra();
+	dijkstra_vertex(vertex* vertex, double distance) : vertex_(vertex) {
+		this->distance = distance;
+	}
+
+	uint id() {
+		return vertex_->id;
+	}
+
+	double distance;
 private:
+	vertex* vertex_;
+};
+
+struct dijkstra {
+public:
+	dijkstra(graph* graph);	
+	int shortest_path(uint from, uint to);
+
+private:
+	graph* graph_;
 };
 
 #endif

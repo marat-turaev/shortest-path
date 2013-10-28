@@ -97,15 +97,19 @@ void graph::print(std::ostream& output) {
 	}
 }
 
-// std::vector<weighted_vertex> graph::get_adjacent_nodes(uint vertex) {
-// 	std::vector<weighted_vertex> vec;
-// 	adjacency_list_node* node = adjacency_list[vertex];
-// 	while (node != 0) {
-// 		vec.push_back(*(node->data));
-// 		node = node->next;
-// 	}
-// 	return vec;
-// }
+std::vector<weighted_vertex> graph::get_adjacent_nodes(uint id) {
+	std::vector<weighted_vertex> vec;
+	adjacency_list_node* node = adjacency_list[id];
+	while (node != 0) {
+		vec.push_back(*(node->data));
+		node = node->next;
+	}
+	return vec;
+}
+
+uint graph::vertices_count() {
+	return vertices;
+}
 
 graph::~graph() {
 	for (int i = 0; i < vertices; ++i) {

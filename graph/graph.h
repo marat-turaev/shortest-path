@@ -33,7 +33,8 @@ public:
 	static graph* construct_from_file(char const* coordinates_file_name, char const* graph_file_name);
 	void add_edge(uint from, uint to, double weight);
 	void print(std::ostream& output);
-	// std::vector<weighted_vertex> get_adjacent_nodes(uint vertex);
+	std::vector<weighted_vertex> get_adjacent_nodes(uint id);
+	uint vertices_count();    
 	~graph();
 private:
 	graph(graph& other);

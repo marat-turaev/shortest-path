@@ -16,6 +16,10 @@ public:
 		vert_ = vert;
 	}
 
+	~weighted_vertex() {
+		delete vert_;
+	}
+
 	vertex* vert_;
 	double weight;
 };
