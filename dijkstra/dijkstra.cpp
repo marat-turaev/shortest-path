@@ -1,9 +1,5 @@
 #include "dijkstra.h"
 
-bool operator<(weighted_vertex const& first, weighted_vertex const& second) {
-	return first.weight < second.weight;
-}
-
 dijkstra::dijkstra(graph *graph1) {
 
 }

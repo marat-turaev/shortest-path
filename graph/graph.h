@@ -4,26 +4,14 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
-typedef unsigned int uint;
-
-struct weighted_vertex {
-public:
-	weighted_vertex(uint vertex, int weight) {
-		this->vertex = vertex;
-		this->weight = weight;
-	}
-
-	//TODO: incapsulate these two fields
-	uint vertex;
-	int weight;
-};
+#include "vertex.h"
 
 struct adjacency_list_node {
 public:
-	adjacency_list_node(uint vertex, int weight) {
-		data = new weighted_vertex(vertex, weight);
+	adjacency_list_node(vertex* vert, double weight) {
+		data = new weighted_vertex(vert, weight);
 	}
+
 	~adjacency_list_node() {
 		delete data;
 	}
@@ -40,8 +28,8 @@ public:
 	graph(uint vertices);
 	static graph* construct_from_file(char const *filename);
 	void add_edge(uint from, uint to, int weight);
-	void print(std::ostream& output);
-	std::vector<weighted_vertex> get_adjacent_nodes(uint vertex);
+	// void print(std::ostream& output);
+	// std::vector<weighted_vertex> get_adjacent_nodes(uint vertex);
 	~graph();
 private:
 	graph(graph& other);
