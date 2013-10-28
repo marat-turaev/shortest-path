@@ -1,10 +1,10 @@
 typedef unsigned int uint;
+#include <map>
 
 struct vertex {
 public:
 	vertex(uint id, int x, int y): id(id), x(x), y(y) { }
 
-	//TODO: incapsulate these fields
 	uint id; 
 	int x; 
 	int y;
@@ -19,3 +19,10 @@ public:
 	vertex* vert_;
 };
 
+struct vertex_factory {
+public:
+	static void register_vertex(vertex* vertex);
+	static vertex* get_vertex(uint id);
+private:
+	static std::map<uint, vertex*> data_;
+};

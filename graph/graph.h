@@ -4,7 +4,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 #include "vertex.h"
+#include <cmath>
+#include <sstream>
 
 struct adjacency_list_node {
 public:
@@ -26,8 +29,8 @@ private:
 class graph {
 public:
 	graph(uint vertices);
-	static graph* construct_from_file(char const *filename);
-	void add_edge(uint from, uint to, int weight);
+	graph* construct_from_file(char const* coordinates_file_name, char const* graph_file_name);
+	void add_edge(uint from, uint to, double weight);
 	// void print(std::ostream& output);
 	// std::vector<weighted_vertex> get_adjacent_nodes(uint vertex);
 	~graph();
