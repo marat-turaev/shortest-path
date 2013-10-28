@@ -8,7 +8,7 @@ dijkstra.o:
 vertex.o:
 	g++ -Wall -c graph/vertex.cpp -o bin/vertex.o
 program: main.o graph.o dijkstra.o vertex.o
-	g++ -Wall bin/main.o bin/graph.o bin/dijkstra.o -o bin/program
+	g++ -Wall bin/vertex.o bin/main.o bin/graph.o bin/dijkstra.o -o bin/program
 clean:
 	rm -f bin/*
 .PHONY:
