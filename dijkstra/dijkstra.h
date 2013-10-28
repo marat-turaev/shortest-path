@@ -9,7 +9,7 @@ public:
 		this->distance = distance;
 	}
 
-	uint id() {
+	uint id() const {
 		return vertex_->id;
 	}
 
