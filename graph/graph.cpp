@@ -44,9 +44,6 @@ graph* graph::construct_from_file(char const* coordinates_file_name, char const*
 	std::ifstream graph_file(graph_file_name);
 	while (getline(graph_file, str)) {
 		std::string tag = str.substr(0, 1);
-		if (tag == "c") {
-			continue;
-		}
 		if (tag == "p") {
 			uint vertices = 0;
 			std::istringstream buffer(split(str, ' ')[2]);
