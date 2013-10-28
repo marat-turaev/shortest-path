@@ -1,5 +1,7 @@
 #include "vertex.h"
 
+std::map<uint, vertex*> vertex_factory::data_;
+
 void vertex_factory::register_vertex(vertex *vertex) {
 	data_[vertex->id] = vertex;
 }

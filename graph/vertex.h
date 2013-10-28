@@ -12,11 +12,12 @@ public:
 
 struct weighted_vertex {
 public:
-	weighted_vertex(vertex* vert, double weight) { 
+	weighted_vertex(vertex* vert, double weight): weight(weight) { 
 		vert_ = vert;
 	}
 
 	vertex* vert_;
+	double weight;
 };
 
 struct vertex_factory {

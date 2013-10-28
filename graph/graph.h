@@ -13,6 +13,7 @@ struct adjacency_list_node {
 public:
 	adjacency_list_node(vertex* vert, double weight) {
 		data = new weighted_vertex(vert, weight);
+		next = 0;
 	}
 
 	~adjacency_list_node() {
@@ -29,9 +30,9 @@ private:
 class graph {
 public:
 	graph(uint vertices);
-	graph* construct_from_file(char const* coordinates_file_name, char const* graph_file_name);
+	static graph* construct_from_file(char const* coordinates_file_name, char const* graph_file_name);
 	void add_edge(uint from, uint to, double weight);
-	// void print(std::ostream& output);
+	void print(std::ostream& output);
 	// std::vector<weighted_vertex> get_adjacent_nodes(uint vertex);
 	~graph();
 private:
