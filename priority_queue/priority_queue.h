@@ -20,7 +20,7 @@ public:
 
    T const& top() const;
 
-   size_t change_key(size_t queue_index, T const& val);
+   size_t change_key(T const& val);
 
    size_t size () const;
    bool   empty() const;  
@@ -92,7 +92,8 @@ T const& priority_queue<T, Comp>::top() const {
 }
 
 template<class T, class Comp>
-size_t priority_queue<T, Comp>::change_key(size_t queue_index, T const& val) {
+size_t priority_queue<T, Comp>::change_key(T const& val) {
+   size_t queue_index = (*vec_)[val.id()];
    key_changed_(at(queue_index), 0);
    key_changed_(val, queue_index);
    

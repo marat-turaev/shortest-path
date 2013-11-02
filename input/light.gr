@@ -7,7 +7,7 @@ c graph contains 6 nodes and 6 arcs
 c
 a 1 2 803
 a 2 1 803
+a 2 3 158
 a 3 4 158
-a 4 3 158
-a 5 6 774
-a 6 5 774
+a 2 4 774
+a 2 5 774

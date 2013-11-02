@@ -3,25 +3,10 @@
 
 #include "../graph/graph.h"
 
-struct dijkstra_vertex {
-public:
-	dijkstra_vertex(vertex* vertex, double distance) : vertex_(vertex) {
-		this->distance = distance;
-	}
-
-	uint id() const {
-		return vertex_->id;
-	}
-
-	double distance;
-private:
-	vertex* vertex_;
-};
-
 struct dijkstra {
 public:
 	dijkstra(graph* graph);	
-	int shortest_path(uint from, uint to);
+	double shortest_path(uint from, uint to);
 
 private:
 	graph* graph_;
