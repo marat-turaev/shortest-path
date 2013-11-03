@@ -12,6 +12,7 @@ double a_star::heuristic(vertex* current, vertex* destination) {
 double a_star::shortest_path(uint from, uint to) {
 	vertex* to_vertex = vertex_factory::get_vertex(to);
 	std::vector<size_t> vec(graph_->vertices_count(), 0);
+	std::vector<size_t> prev(graph_->vertices_count(), 0);
 	std::vector<char> visited(graph_->vertices_count(), 0);
 	std::vector<double> dist(graph_->vertices_count(), 0);
 
@@ -25,9 +26,14 @@ double a_star::shortest_path(uint from, uint to) {
 		dijkstra_vertex cur = queue.top();
 		queue.pop();
 		visited[cur.id()] = 1;
-		// dist[cur.id()] = cur.distance - heuristic(cur.vertex_, to_vertex);
 
 		if (cur.id() == to) {
+			int j = to;
+			while (prev[j] != from) {
+				std::cout << j << " ";
+				j = prev[j];
+			}
+			std::cout << from << std::endl;
 			return dist[to];
 		}
 
@@ -39,18 +45,23 @@ double a_star::shortest_path(uint from, uint to) {
 
 			if (vec[i->vert_->id] == 0) {
 				dist[i->vert_->id] = dist[cur.id()] + i->weight;
+				prev[i->vert_->id] = cur.id();
 				dijkstra_vertex temp(i->vert_, i->weight + dist[cur.id()] + heuristic(i->vert_, to_vertex));
 				queue.push(temp);
 				continue;
 			}
 
 			dijkstra_vertex temp = queue.at(vec[i->vert_->id]);
-			dist[i->vert_->id] = std::min(dist[i->vert_->id], dist[cur.id()] + i->weight);
-			
-			temp.update_distance(i->weight + dist[cur.id()] + heuristic(i->vert_, to_vertex));
-			queue.change_key(temp);
+
+			if (dist[cur.id()] + i->weight < dist[i->vert_->id]) {
+				dist[i->vert_->id] = dist[cur.id()] + i->weight;
+				prev[i->vert_->id] = cur.id();
+				temp.update_distance(i->weight + dist[cur.id()] + heuristic(i->vert_, to_vertex));
+				queue.change_key(temp);
+			}
 		}
 	}
 
 	return -1;
+
 }

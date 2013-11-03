@@ -22,11 +22,11 @@ public:
 	}
 
 	void update_distance(double new_distance) {
-		distance = std::min(new_distance, distance);
+		distance = std::min(distance, new_distance);
 	}
 
 	double distance;
-// private:
+private:
 	vertex* vertex_;
 };
 

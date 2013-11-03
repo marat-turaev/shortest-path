@@ -1,10 +1,12 @@
 #include "dijkstra.h"
 #include "../priority_queue/priority_queue.h"
+#include <iostream>
 
 dijkstra::dijkstra(graph* graph): graph_(graph) { }
 
 double dijkstra::shortest_path(uint from, uint to) {
 	std::vector<size_t> vec(graph_->vertices_count(), 0);
+	std::vector<size_t> prev(graph_->vertices_count(), 0);
 	std::vector<double> dist(graph_->vertices_count(), -1);
 
 	priority_queue<dijkstra_vertex> queue(&vec);
@@ -18,6 +20,12 @@ double dijkstra::shortest_path(uint from, uint to) {
 		dist[cur.id()] = cur.distance;
 
 		if (cur.id() == to) {
+			int j = to;
+			while (prev[j] != from) {
+				std::cout << j << " ";
+				j = prev[j];
+			}
+			std::cout << from << std::endl;
 			return cur.distance;
 		}
 
@@ -30,14 +38,19 @@ double dijkstra::shortest_path(uint from, uint to) {
 
 			if (vec[i->vert_->id] == 0) {
 				dijkstra_vertex temp(i->vert_, i->weight + cur.distance);
+				prev[i->vert_->id] = cur.id();
 				queue.push(temp);
 				continue;
 			}
 
 			dijkstra_vertex temp = queue.at(vec[i->vert_->id]);
-			temp.update_distance(i->weight + cur.distance);
-			queue.change_key(temp);
-		}
+
+			if (temp.distance > i->weight + cur.distance) {
+				temp.update_distance(i->weight + cur.distance);
+				prev[i->vert_->id] = cur.id();
+				queue.change_key(temp);
+			}
+		}	
 	}
 
 	return -1;
