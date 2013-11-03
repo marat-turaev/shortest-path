@@ -26,7 +26,7 @@ public:
 	}
 
 	double distance;
-private:
+// private:
 	vertex* vertex_;
 };
 
