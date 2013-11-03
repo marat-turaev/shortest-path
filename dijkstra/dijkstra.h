@@ -1,7 +1,7 @@
 #ifndef DIJKSTRA_H
 #define DIJKSTRA_H
 
-#include "../graph/graph.h"
+#include "graph/graph.h"
 
 struct dijkstra {
 public:

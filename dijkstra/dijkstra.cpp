@@ -1,5 +1,5 @@
 #include "dijkstra.h"
-#include "../priority_queue/priority_queue.h"
+#include "priority_queue/priority_queue.h"
 #include <iostream>
 
 dijkstra::dijkstra(graph* graph): graph_(graph) { }
