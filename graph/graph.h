@@ -1,13 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
-
-#include <iostream>
-#include <fstream>
 #include <vector>
-#include <string>
 #include "vertex.h"
-#include <cmath>
-#include <sstream>
 
 struct adjacency_list_node {
 public:

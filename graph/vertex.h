@@ -1,5 +1,6 @@
 typedef unsigned int uint;
 #include <map>
+#include <algorithm>
 
 struct vertex {
 public:
@@ -21,15 +22,15 @@ public:
 	}
 
 	void update_distance(double new_distance) {
-		if (new_distance < distance) {
-			distance = new_distance;
-		}
+		distance = std::min(new_distance, distance);
 	}
 
 	double distance;
 private:
 	vertex* vertex_;
 };
+
+bool operator<(dijkstra_vertex const& first, dijkstra_vertex const& second);
 
 struct weighted_vertex {
 public:

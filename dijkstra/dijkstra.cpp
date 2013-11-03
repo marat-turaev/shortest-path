@@ -1,10 +1,6 @@
 #include "dijkstra.h"
 #include "../priority_queue/priority_queue.h"
 
-bool operator<(dijkstra_vertex const& first, dijkstra_vertex const& second) {
-	return first.distance < second.distance;
-}
-
 dijkstra::dijkstra(graph* graph): graph_(graph) { }
 
 double dijkstra::shortest_path(uint from, uint to) {
