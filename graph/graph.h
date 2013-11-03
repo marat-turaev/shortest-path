@@ -30,6 +30,7 @@ public:
 	std::vector<weighted_vertex> get_adjacent_nodes(uint id);
 	uint vertices_count();    
 	~graph();
+	vertex_factory* vertex_factory_;
 private:
 	graph(graph& other);
 	graph& operator=(graph& other);

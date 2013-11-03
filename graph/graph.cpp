@@ -21,6 +21,7 @@ std::vector<std::string> split(const std::string &s, char delim) {
 
 
 graph::graph(uint vertices): vertices(vertices) {
+	vertex_factory_ = new vertex_factory();
 	adjacency_list = new adjacency_list_node*[vertices];
 	for (int i = 0; i < vertices; ++i) {
 		adjacency_list[i] = 0;
@@ -33,6 +34,12 @@ graph* graph::construct_from_file(char const* coordinates_file_name, char const*
 	std::string str;
 	while (getline(coordinates_file, str)) {
 		std::string tag = str.substr(0, 1);
+		if (tag == "p") {
+			uint vertices = 0;
+			std::istringstream buffer(split(str, ' ')[4]);
+			buffer >> vertices;
+			result = new graph(vertices);
+		}
 		if (tag == "v") {
 			int id = 0;
 			int x = 0;
@@ -40,7 +47,7 @@ graph* graph::construct_from_file(char const* coordinates_file_name, char const*
 			std::string temp;
 			std::istringstream buffer(str);
 			buffer >> temp >> id >> x >> y;
-			vertex_factory::register_vertex(new vertex(id - 1, x, y));
+			result->vertex_factory_->register_vertex(new vertex(id - 1, x, y));
 		}
 	}
 	coordinates_file.close();
@@ -48,12 +55,6 @@ graph* graph::construct_from_file(char const* coordinates_file_name, char const*
 	std::ifstream graph_file(graph_file_name);
 	while (getline(graph_file, str)) {
 		std::string tag = str.substr(0, 1);
-		if (tag == "p") {
-			uint vertices = 0;
-			std::istringstream buffer(split(str, ' ')[2]);
-			buffer >> vertices;
-			result = new graph(vertices);
-		}
 		if (tag == "a") {
 			uint from = 0;
 			uint to = 0;
@@ -62,8 +63,8 @@ graph* graph::construct_from_file(char const* coordinates_file_name, char const*
 			buffer >> temp >> from >> to;
 			--from;
 			--to;
-			vertex* from_vertex = vertex_factory::get_vertex(from);
-			vertex* to_vertex = vertex_factory::get_vertex(to);
+			vertex* from_vertex = result->vertex_factory_->get_vertex(from);
+			vertex* to_vertex = result->vertex_factory_->get_vertex(to);
 			double distance = sqrt((from_vertex->x-(double)to_vertex->x)*(from_vertex->x-(double)to_vertex->x) + (from_vertex->y-(double)to_vertex->y)*(from_vertex->y-(double)to_vertex->y));
 			result->add_edge(from, to, distance);
 		}
@@ -74,7 +75,7 @@ graph* graph::construct_from_file(char const* coordinates_file_name, char const*
 }
 
 void graph::add_edge(uint from, uint to, double weight) {
-	vertex* vertex = vertex_factory::get_vertex(to);
+	vertex* vertex = vertex_factory_->get_vertex(to);
 
 	if (adjacency_list[from] == 0) {
 		adjacency_list[from] = new adjacency_list_node(vertex, weight);
@@ -120,4 +121,5 @@ graph::~graph() {
 		delete adjacency_list[i];
 	}
 	delete[] adjacency_list;
+	delete vertex_factory_;
 }

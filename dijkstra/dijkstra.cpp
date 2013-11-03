@@ -11,7 +11,7 @@ double dijkstra::shortest_path(uint from, uint to) {
 
 	priority_queue<dijkstra_vertex> queue(&vec);
 
-	dijkstra_vertex from_vertex(vertex_factory::get_vertex(from), 0);
+	dijkstra_vertex from_vertex(graph_->vertex_factory_->get_vertex(from), 0);
 	queue.push(from_vertex);
 
 	while (!queue.empty()) {

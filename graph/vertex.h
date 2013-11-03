@@ -38,19 +38,15 @@ public:
 		vert_ = vert;
 	}
 
-	~weighted_vertex() {
-		//TODO: Implement destructor!
-		// delete vert_;
-	}
-
 	vertex* vert_;
 	double weight;
 };
 
 struct vertex_factory {
 public:
-	static void register_vertex(vertex* vertex);
-	static vertex* get_vertex(uint id);
+	void register_vertex(vertex* vertex);
+	vertex* get_vertex(uint id);
+	~vertex_factory();
 private:
-	static std::map<uint, vertex*> data_;
+	std::map<uint, vertex*> data_;
 };

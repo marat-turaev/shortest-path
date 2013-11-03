@@ -10,7 +10,7 @@ double a_star::heuristic(vertex* current, vertex* destination) {
 }
 
 double a_star::shortest_path(uint from, uint to) {
-	vertex* to_vertex = vertex_factory::get_vertex(to);
+	vertex* to_vertex = graph_->vertex_factory_->get_vertex(to);
 	std::vector<size_t> vec(graph_->vertices_count(), 0);
 	std::vector<size_t> prev(graph_->vertices_count(), 0);
 	std::vector<char> visited(graph_->vertices_count(), 0);
@@ -18,7 +18,7 @@ double a_star::shortest_path(uint from, uint to) {
 
 	priority_queue<dijkstra_vertex> queue(&vec);
 
-	dijkstra_vertex from_vertex(vertex_factory::get_vertex(from), 0);
+	dijkstra_vertex from_vertex(graph_->vertex_factory_->get_vertex(from), 0);
 	queue.push(from_vertex);
 	dist[from] = 0;
 	
