@@ -4,7 +4,7 @@
 
 dijkstra::dijkstra(graph* graph): graph_(graph) { }
 
-double dijkstra::shortest_path(uint from, uint to, vector<uint>& previous) {
+double dijkstra::shortest_path(uint from, uint to, vector<boost::optional<uint> >& previous) {
 	vector<size_t> vec(graph_->vertices_count(), 0);
 	vector<double> dist(graph_->vertices_count(), -1);
 

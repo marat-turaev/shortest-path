@@ -10,7 +10,7 @@ double a_star::heuristic(vertex* current, vertex* destination) {
 	return sqrt((current->x-(double)destination->x) * (current->x-(double)destination->x) + (current->y-(double)destination->y) * (current->y-(double)destination->y));
 }
 
-double a_star::shortest_path(uint from, uint to, vector<uint>& previous) {
+double a_star::shortest_path(uint from, uint to, vector<boost::optional<uint> >& previous) {
 	vertex* to_vertex = graph_->vertex_factory_->get_vertex(to);
 	vector<size_t> vec(graph_->vertices_count(), 0);
 	vector<char> visited(graph_->vertices_count(), 0);
