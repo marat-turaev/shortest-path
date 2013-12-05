@@ -1,4 +1,4 @@
-CC=g++
+CC=clang
 CFLAGS=-c -Wall -g -I/opt/local/include
 INC=-I. 
 all: program

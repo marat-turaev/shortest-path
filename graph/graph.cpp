@@ -26,6 +26,16 @@ graph::graph(uint vertices): vertices(vertices) {
 	for (int i = 0; i < vertices; ++i) {
 		adjacency_list[i] = 0;
 	}
+	vertices_delete_flag = std::vector<bool>(vertices, false);
+}
+
+graph::graph(graph const & other) {
+	vertex_factory_ = new vertex_factory();
+	adjacency_list = new adjacency_list_node*[vertices];
+	for (int i = 0; i < vertices; ++i) {
+		adjacency_list[i] = 0;
+	}
+	std::vector<bool> vertices_delete_flag(vertices, false);
 }
 
 graph* graph::construct_from_file(char const* coordinates_file_name, char const* graph_file_name) {
@@ -91,12 +101,11 @@ void graph::add_edge(uint from, uint to, double weight) {
 
 void graph::print(std::ostream& output) {
 	output << "Graph represenation:" << std::endl;
-	for (int i = 0; i < vertices; ++i) {
+	for (uint i = 0; i < vertices; ++i) {
 		output << i << " adjacency list: ";
-		adjacency_list_node *cur = adjacency_list[i];
-		while (cur != 0) {
-			output << "(" << cur->data->vert_->id << "; " << cur->data->weight << ") ";
-			cur = cur->next;
+		std::vector<weighted_vertex> adjacent_nodes = get_adjacent_nodes(i);
+		for (std::vector<weighted_vertex>::iterator j = adjacent_nodes.begin(); j != adjacent_nodes.end(); ++j) {
+			output << "(" << j->vert_->id << "; " <<  j->weight << ") ";			
 		}
 		output << std::endl;
 	}
@@ -106,7 +115,9 @@ std::vector<weighted_vertex> graph::get_adjacent_nodes(uint id) {
 	std::vector<weighted_vertex> vec;
 	adjacency_list_node* node = adjacency_list[id];
 	while (node != 0) {
-		vec.push_back(*(node->data));
+		if (vertices_delete_flag[node->data->vert_->id] == false) {
+			vec.push_back(*(node->data));
+		}
 		node = node->next;
 	}
 	return vec;
@@ -122,4 +133,12 @@ graph::~graph() {
 	}
 	delete[] adjacency_list;
 	delete vertex_factory_;
+}
+
+void graph::build_reaches() {
+	return;
+}
+
+void graph::delete_node(uint id) {
+	vertices_delete_flag[id] = true;
 }

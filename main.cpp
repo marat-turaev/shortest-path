@@ -26,6 +26,12 @@ void print_path(std::vector<boost::optional<uint> >& v) {
 }
 
 int main() {
+	graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
+	g->print(std::cout);
+	return 0;
+}
+
+int test() {
 	graph* g = graph::construct_from_file("input/USA-road-d.USA.co", "input/USA-road-d.USA.gr");
 	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
 	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");

@@ -24,17 +24,20 @@ private:
 class graph {
 public:
 	graph(uint vertices);
+	graph(graph const & other);
 	static graph* construct_from_file(char const* coordinates_file_name, char const* graph_file_name);
 	void add_edge(uint from, uint to, double weight);
 	void print(std::ostream& output);
 	std::vector<weighted_vertex> get_adjacent_nodes(uint id);
+	void delete_node(uint id);
 	uint vertices_count();    
+	void build_reaches();
 	~graph();
 	vertex_factory* vertex_factory_;
 private:
-	graph(graph& other);
 	graph& operator=(graph& other);
 	uint vertices;
+	std::vector<bool> vertices_delete_flag;
 	adjacency_list_node** adjacency_list;
 };
 
