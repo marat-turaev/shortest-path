@@ -55,6 +55,5 @@ double a_star::shortest_path(uint from, uint to, vector<boost::optional<uint> >&
 			}
 		}
 	}
-
 	return -1;
 }

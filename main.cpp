@@ -26,8 +26,12 @@ void print_path(std::vector<boost::optional<uint> >& v) {
 }
 
 int main() {
+	// graph* g = graph::construct_from_file("input/ultralight.co", "input/ultralight.gr");
 	graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
-	g->print(std::cout);
+	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
+	// g->build_shortest_path_tree(0, 1);
+	g->exact_reaches();
+	g->build_reaches();
 	return 0;
 }
 

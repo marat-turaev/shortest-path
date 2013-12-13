@@ -2,12 +2,18 @@ c 9th DIMACS Implementation Challenge: Shortest Paths
 c http://www.dis.uniroma1.it/~challenge9
 c TIGER/Line nodes coords for graph USA-road-d.NY
 c
-p aux sp co 6
-c graph contains 6 nodes
+p aux sp co 12
+c graph contains 8 nodes
 c
 v 1 0 0
 v 2 1 0
-v 3 1 2
-v 4 2 1
-v 5 2 0
-v 6 2 2
+v 3 2 0
+v 4 3 0
+v 5 0 1
+v 6 0 2
+v 7 0 3
+v 8 1 1
+v 9 4 0
+v 10 0 4
+v 11 0 5
+v 12 5 0

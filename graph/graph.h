@@ -32,13 +32,23 @@ public:
 	void delete_node(uint id);
 	uint vertices_count();    
 	void build_reaches();
+	void exact_reaches();
 	~graph();
 	vertex_factory* vertex_factory_;
+
+	void build_shortest_path_tree(uint from, int epsilon);
 private:
 	graph& operator=(graph& other);
 	uint vertices;
+	uint deleted_nodes;
 	std::vector<bool> vertices_delete_flag;
 	adjacency_list_node** adjacency_list;
+	bool cloned;
+
+	std::vector<double> reaches;
+	std::vector<double> penalties;
+	void remove_vertices_with_low_reaches(int epsilon);
+	double dfs_height(uint from, std::vector<double>& dist, std::vector<double>& height, std::vector<bool>& was);
 };
 
 #endif
