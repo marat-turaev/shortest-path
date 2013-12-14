@@ -179,14 +179,8 @@ void graph::delete_node(uint id) {
 }
 
 void graph::build_shortest_path_tree(uint from, int epsilon) {
+	if (from % 1000 == 0) std::cout << "build_shortest_path_tree " << from << " " << epsilon << std::endl;
 	vector<uint> visited;
-	vector<size_t> vec(vertices, 0);
-	vector<size_t> previous(vertices, -1);
-	vector<size_t> milestones_passed(vertices, 0);
-	vector<double> distance_from_previous_milestone(vertices, 0);
-	vector<double> dist(vertices, -1);
-	vector<double> height(vertices, -1);
-	vector<bool> was(vertices, 0);
 
 	priority_queue<dijkstra_vertex> queue(&vec);
 
@@ -263,7 +257,15 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 	print_vector(height, "height");
 
 	for (std::vector<uint>::iterator i = visited.begin(); i != visited.end(); ++i) {
-		reaches[*i] = fmax(reaches[*i], fmin(height[*i], dist[*i]));
+		uint id = *i;
+		reaches[id] = fmax(reaches[id], fmin(height[id], dist[id]));
+		vec[id] = 0;
+		previous[id] = -1;
+		milestones_passed[id] = 0;
+		distance_from_previous_milestone[id] = 0;
+		dist[id] = -1;
+		height[id] = -1;
+		was[id] = 0;
 	}
 
 	print_vector(reaches, "reaches");
@@ -321,6 +323,14 @@ void graph::exact_reaches() {
 }
 
 void graph::build_reaches() {
+	vec = vector<size_t> (vertices, 0);
+	previous = vector<size_t> (vertices, -1);
+	milestones_passed = vector<size_t> (vertices, 0);
+	distance_from_previous_milestone = vector<double> (vertices, 0);
+	dist = vector<double> (vertices, -1);
+	height = vector<double> (vertices, -1);
+	was = vector<bool> (vertices, 0);
+
 	int epsilon = 1;
 
 	while (deleted_nodes != vertices) {

@@ -1,5 +1,9 @@
 from graph_tool.all import *
-filename = "light"
+# filename = "USA-road-d.NY.mid"
+# filename = "USA-road-d.NY.small"
+filename = "mesh"
+# filename = "circle"
+# filename = "light"
 # filename = "USA-road-d.NY"
 # filename = "USA-road-d.USA"
 

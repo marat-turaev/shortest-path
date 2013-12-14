@@ -10,7 +10,7 @@ const uint to = 2200000;
 
 void print_path(std::vector<boost::optional<uint> >& v) {
 	std::ofstream vertices("vertices.txt");
-	for (int i = 0; i < v.size(); ++i) {
+	for (size_t i = 0; i < v.size(); ++i) {
 		if (v[i]) {
 			vertices << i << std::endl;
 		}
@@ -26,18 +26,21 @@ void print_path(std::vector<boost::optional<uint> >& v) {
 }
 
 int main() {
+	// graph* g = graph::construct_from_file("input/USA-road-d.NY.mid.co", "input/USA-road-d.NY.mid.gr");
+	// graph* g = graph::construct_from_file("input/USA-road-d.NY.small.co", "input/USA-road-d.NY.small.gr");
+	graph* g = graph::construct_from_file("input/mesh.co", "input/mesh.gr");
+	// graph* g = graph::construct_from_file("input/circle.co", "input/circle.gr");
 	// graph* g = graph::construct_from_file("input/ultralight.co", "input/ultralight.gr");
-	graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
+	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
 	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
 	// g->build_shortest_path_tree(0, 1);
-	g->exact_reaches();
+	// g->exact_reaches();
 	g->build_reaches();
 	return 0;
 }
 
-int test() {
+void test() {
 	graph* g = graph::construct_from_file("input/USA-road-d.USA.co", "input/USA-road-d.USA.gr");
-	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
 	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
 	// g->print(std::cout);
 	std::cout.precision(15);

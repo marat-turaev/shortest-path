@@ -1,4 +1,4 @@
-CC=clang
+CC=g++
 CFLAGS=-c -Wall -g -I/opt/local/include
 INC=-I. 
 all: program
@@ -16,7 +16,7 @@ priority_queue.o:
 vertex.o:
 	$(CC) $(CFLAGS) $(INC) graph/vertex.cpp -o bin/vertex.o
 program: main.o graph.o vertex.o priority_queue.o dijkstra.o a_star.o
-	g++ bin/priority_queue.o bin/vertex.o bin/main.o bin/graph.o bin/a_star.o bin/dijkstra.o -o program
+	g++ bin/priority_queue.o bin/vertex.o bin/main.o bin/graph.o bin/a_star.o bin/dijkstra.o -o program -lprofiler
 clean:
 	rm -f bin/*
 .PHONY:

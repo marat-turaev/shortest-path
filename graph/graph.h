@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include <vector>
+#include <iostream>
 #include "vertex.h"
 
 struct adjacency_list_node {
@@ -49,6 +50,16 @@ private:
 	std::vector<double> penalties;
 	void remove_vertices_with_low_reaches(int epsilon);
 	double dfs_height(uint from, std::vector<double>& dist, std::vector<double>& height, std::vector<bool>& was);
+
+	std::vector<size_t> vec;
+	std::vector<size_t> previous;
+	std::vector<size_t> milestones_passed;
+	std::vector<double> distance_from_previous_milestone;
+	std::vector<double> dist;
+	std::vector<double> height;
+	std::vector<bool> was;
+
+	std::vector<size_t> dirty;
 };
 
 #endif
