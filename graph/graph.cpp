@@ -53,11 +53,11 @@ graph::graph(uint vertices): vertices(vertices) {
 	cloned = false;
 	vertex_factory_ = new vertex_factory();
 	adjacency_list = std::vector<std::vector<weighted_vertex> >(vertices);
-	for (int i = 0; i < vertices; ++i) {
+	for (size_t i = 0; i < vertices; ++i) {
 		adjacency_list[i] = std::vector<weighted_vertex>();
 	}
 	// adjacency_list = new adjacency_list_node*[vertices];
-	// for (int i = 0; i < vertices; ++i) {
+	// for (size_t i = 0; i < vertices; ++i) {
 	// 	adjacency_list[i] = 0;
 	// }
 	vertices_delete_flag = std::vector<bool>(vertices, false);
@@ -300,11 +300,11 @@ void graph::remove_vertices_with_low_reaches(int epsilon) {
 void graph::exact_reaches() {
 	int epsilon = 100;
 
-	for (int i = 0; i < vertices; ++i) {
+	for (size_t i = 0; i < vertices; ++i) {
 		build_shortest_path_tree(i, epsilon);
 	}
 
-	for (int i = 0; i < vertices; ++i) {
+	for (size_t i = 0; i < vertices; ++i) {
 		std::cout << "Final reach of " << i << " : " << reaches[i] << std::endl;
 	}
 
@@ -323,7 +323,7 @@ void graph::build_reaches() {
 
 	// while (deleted_nodes != vertices) {
 		std::cout << "Epsilon: " << epsilon << std::endl;
-		for (int i = 0; i < vertices; ++i) {
+		for (size_t i = 0; i < vertices; ++i) {
 			build_shortest_path_tree(i, epsilon);
 		}
 		// remove_vertices_with_low_reaches(epsilon);
@@ -336,7 +336,7 @@ void graph::build_reaches() {
 tree::tree(uint vertices): vertices(vertices) {
 	penalties = std::vector<double>(vertices, 0);
 	adjacency_list = std::vector<std::vector<light_weighted_vertex> >(vertices);
-	for (int i = 0; i < vertices; ++i) {
+	for (size_t i = 0; i < vertices; ++i) {
 		adjacency_list[i] = std::vector<light_weighted_vertex>();
 	}
 }
