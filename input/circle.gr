@@ -1,0 +1,23 @@
+c 9th DIMACS Implementation Challenge: Shortest Paths
+c http://www.dis.uniroma1.it/~challenge9
+c TIGER/Line graph USA-road-d.NY
+c
+p sp 8 16
+c graph contains 6 nodes and 6 arcs
+c
+a 1 2 666
+a 2 1 666
+a 2 3 666
+a 3 2 666
+a 3 4 666
+a 4 3 666
+a 4 5 666
+a 5 4 666
+a 5 6 666
+a 6 5 666
+a 6 7 666
+a 7 6 666
+a 7 8 666
+a 8 7 666
+a 8 1 666
+a 1 8 666

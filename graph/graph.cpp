@@ -321,14 +321,14 @@ void graph::build_reaches() {
 
 	int epsilon = 1;
 
-	while (deleted_nodes != vertices) {
+	// while (deleted_nodes != vertices) {
 		std::cout << "Epsilon: " << epsilon << std::endl;
 		for (int i = 0; i < vertices; ++i) {
 			build_shortest_path_tree(i, epsilon);
 		}
-		remove_vertices_with_low_reaches(epsilon);
+		// remove_vertices_with_low_reaches(epsilon);
 		epsilon *= 3;
-	}
+	// }
 
 	std::cout << "Done" << std::endl;
 }
