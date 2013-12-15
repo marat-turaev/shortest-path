@@ -4,24 +4,6 @@
 #include <iostream>
 #include "vertex.h"
 
-struct adjacency_list_node {
-public:
-	adjacency_list_node(vertex* vert, double weight) {
-		data = new weighted_vertex(vert, weight);
-		next = 0;
-	}
-
-	~adjacency_list_node() {
-		delete data;
-	}
-
-	adjacency_list_node* next;
-	weighted_vertex *data;
-private:
-	adjacency_list_node(adjacency_list_node& other);
-	adjacency_list_node& operator=(adjacency_list_node& other);
-};
-
 class graph {
 public:
 	graph(uint vertices);
@@ -43,23 +25,35 @@ private:
 	uint vertices;
 	uint deleted_nodes;
 	std::vector<bool> vertices_delete_flag;
-	adjacency_list_node** adjacency_list;
+	std::vector<std::vector<weighted_vertex> > adjacency_list;
 	bool cloned;
 
 	std::vector<double> reaches;
 	std::vector<double> penalties;
 	void remove_vertices_with_low_reaches(int epsilon);
-	double dfs_height(uint from, std::vector<double>& dist, std::vector<double>& height, std::vector<bool>& was);
+	double dfs_height(uint from, std::vector<double>& height);
 
+	std::vector<size_t> back_reference;
 	std::vector<size_t> vec;
 	std::vector<size_t> previous;
 	std::vector<size_t> milestones_passed;
 	std::vector<double> distance_from_previous_milestone;
 	std::vector<double> dist;
-	std::vector<double> height;
-	std::vector<bool> was;
 
 	std::vector<size_t> dirty;
+};
+
+class tree {
+public:
+	tree(uint vertices);
+	void add_edge(uint from, uint to, double weight);
+	void print(std::ostream& output);
+	std::vector<double> penalties;
+	double dfs_height(uint from, std::vector<double>& height);
+private:
+	std::vector<std::vector<light_weighted_vertex> > adjacency_list;
+	std::vector<light_weighted_vertex> get_adjacent_nodes(uint id);
+	uint vertices;
 };
 
 #endif

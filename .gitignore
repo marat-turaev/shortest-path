@@ -18,3 +18,5 @@ nbproject/
 input/
 drawer/*.png
 *.txt
+*.prof
+*.pdf

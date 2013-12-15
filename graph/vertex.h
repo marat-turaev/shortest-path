@@ -34,11 +34,23 @@ bool operator<(dijkstra_vertex const& first, dijkstra_vertex const& second);
 
 struct weighted_vertex {
 public:
+	weighted_vertex() {
+
+	}
+
 	weighted_vertex(vertex* vert, double weight): weight(weight) { 
 		vert_ = vert;
 	}
 
 	vertex* vert_;
+	double weight;
+};
+
+struct light_weighted_vertex {
+public:
+	light_weighted_vertex(uint id, double weight): id(id), weight(weight) {}
+
+	uint id;
 	double weight;
 };
 
