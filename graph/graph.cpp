@@ -37,14 +37,12 @@ std::vector<std::string> split(const std::string &s, char delim) {
     return elems;
 }
 
-graph::graph(uint vertices): vertices(vertices) {
-	deleted_nodes = 0;
-	vertex_factory_ = new vertex_factory();
-	adjacency_list = std::vector<std::vector<weighted_vertex> >(vertices);
-	for (size_t i = 0; i < vertices; ++i) {
-		adjacency_list[i] = std::vector<weighted_vertex>();
-	}
-	vertices_delete_flag = std::vector<bool>(vertices, false);
+graph::graph(uint vertices): 
+	vertex_factory_(new vertex_factory()),
+	vertices(vertices),
+	deleted_nodes(0),
+	vertices_delete_flag(std::vector<bool>(vertices, false)),
+	adjacency_list(std::vector<std::vector<weighted_vertex> >(vertices, std::vector<weighted_vertex>())) {
 }
 
 graph* graph::construct_from_file(char const* coordinates_file_name, char const* graph_file_name) {
@@ -155,7 +153,7 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 			}
 		}
 
-		dist[cur.id()] = cur.distance;
+		distance[cur.id()] = cur.distance;
 		back_reference[cur.id()] = visited_count;
 		visited[visited_count] = cur.id();
 		visited_count++;
@@ -171,7 +169,7 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 				continue;
 			}
 
-			if (dist[i->vert_->id] != -1) {
+			if (distance[i->vert_->id] != -1) {
 				continue;
 			}
 
@@ -205,24 +203,22 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 	for (int i = 0; i < visited_count; ++i) {
 		uint id = visited[i];
 		if (id != from)  {
-			dfs_tree.add_edge(back_reference[previous[id]], back_reference[id], dist[id] - dist[previous[id]]);
+			dfs_tree.add_edge(back_reference[previous[id]], back_reference[id], distance[id] - distance[previous[id]]);
 			dfs_tree.penalties[back_reference[id]] = penalties[id];
 		}
 	}
 
-	// dfs over min-path tree to calculate reaches
 	dfs_tree.dfs_height(0, local_height);
 
-	//cleanup
 	for (int i = 0; i < visited_count; ++i) {
 		uint id = visited[i];
 		visited[i] = 0;
-		reaches[id] = fmax(reaches[id], fmin(local_height[back_reference[id]], dist[id]));
+		reaches[id] = fmax(reaches[id], fmin(local_height[back_reference[id]], distance[id]));
 		vec[id] = 0;
 		previous[id] = -1;
 		milestones_passed[id] = 0;
 		distance_from_previous_milestone[id] = 0;
-		dist[id] = -1;
+		distance[id] = -1;
 		back_reference[id] = 0;
 		local_height[i] = -1;
 	}
@@ -265,10 +261,10 @@ void graph::build_reaches() {
 	previous = vector<size_t> (vertices, -1);
 	milestones_passed = vector<size_t> (vertices, 0);
 	distance_from_previous_milestone = vector<double> (vertices, 0);
-	dist = vector<double> (vertices, -1);
+	distance = vector<double> (vertices, -1);
 	local_height = std::vector<double> (vertices, -1);
 
-	int epsilon = 1;
+	int epsilon = 1000;
 
 	while (deleted_nodes != vertices) {
 		std::cout << "Epsilon: " << epsilon << std::endl;
@@ -282,7 +278,7 @@ void graph::build_reaches() {
 	}
 
 	std::cout << "---REACHES---" << std::endl;
-	std::cout.precision(7);
+	std::cout.precision(15);
 	for (int i = 0; i < vertices; ++i) {
 		std::cout << final_reaches[i] << std::endl;
 	}

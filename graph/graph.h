@@ -37,7 +37,7 @@ private:
 	std::vector<size_t> previous;
 	std::vector<size_t> milestones_passed;
 	std::vector<double> distance_from_previous_milestone;
-	std::vector<double> dist;
+	std::vector<double> distance;
 	std::vector<uint> visited;
 	std::vector<double> local_height;
 };

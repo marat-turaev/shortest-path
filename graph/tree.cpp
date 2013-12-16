@@ -2,12 +2,10 @@
 #include <cmath>
 using std::vector;
 
-tree::tree(uint vertices): vertices(vertices) {
-	penalties = std::vector<double>(vertices, 0);
-	adjacency_list = std::vector<std::vector<light_weighted_vertex> >(vertices);
-	for (size_t i = 0; i < vertices; ++i) {
-		adjacency_list[i] = std::vector<light_weighted_vertex>();
-	}
+tree::tree(uint vertices): 
+	penalties(std::vector<double>(vertices, 0)),
+	adjacency_list(std::vector<std::vector<light_weighted_vertex> >(vertices, std::vector<light_weighted_vertex>())),
+	vertices(vertices) {
 }
 
 void tree::add_edge(uint from, uint to, double weight) {

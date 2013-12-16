@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-c -Wall -O0 -g -I/opt/local/include
+CFLAGS=-c -Wall -O3 -I/opt/local/include
 INC=-I.
 all: program
 default: program
