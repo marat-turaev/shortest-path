@@ -102,7 +102,7 @@ void graph::print(std::ostream& output) {
 	output << "Graph represenation:" << std::endl;
 	for (uint i = 0; i < vertices; ++i) {
 		output << i << " adjacency list: ";
-		std::vector<weighted_vertex> adjacent_nodes = get_adjacent_nodes(i);
+		std::vector<weighted_vertex>& adjacent_nodes = get_adjacent_nodes(i);
 		for (std::vector<weighted_vertex>::iterator j = adjacent_nodes.begin(); j != adjacent_nodes.end(); ++j) {
 			output << "(" << j->vert_->id << "; " <<  j->weight << ") ";			
 		}
@@ -110,19 +110,8 @@ void graph::print(std::ostream& output) {
 	}
 }
 
-std::vector<weighted_vertex> graph::get_adjacent_nodes(uint id) {
-	//assuming no vertices with degree > 10
-	std::vector<weighted_vertex> vec(10);
-	std::vector<weighted_vertex>& adjacent_nodes = adjacency_list[id];
-	size_t count = 0;
-	for (std::vector<weighted_vertex>::iterator i = adjacent_nodes.begin(); i != adjacent_nodes.end(); ++i) {
-		if (vertices_delete_flag[i->vert_->id] == false) {
-			vec[count] = *i;
-			count++;
-		}
-	}
-	vec.resize(count);
-	return vec;
+std::vector<weighted_vertex>& graph::get_adjacent_nodes(uint id) {
+	return adjacency_list[id];
 }
 
 uint graph::vertices_count() {
@@ -175,9 +164,13 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 			continue;
 		}
 
-		vector<weighted_vertex> adjacent = get_adjacent_nodes(cur.id());
+		vector<weighted_vertex>& adjacent = get_adjacent_nodes(cur.id());
 
 		for (vector<weighted_vertex>::iterator i = adjacent.begin(); i != adjacent.end(); ++i) {
+			if (vertices_delete_flag[i->vert_->id]) {
+				continue;
+			}
+
 			if (dist[i->vert_->id] != -1) {
 				continue;
 			}
@@ -207,27 +200,17 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 		}	
 	}
 
-	// std::cout << "visited " << visited.size() << std::endl;
-
 	tree dfs_tree(visited_count);
 
 	for (int i = 0; i < visited_count; ++i) {
 		uint id = visited[i];
 		if (id != from)  {
-			// std::cout << back_reference[previous[id]] << " " << back_reference[id] << " " << dist[id] - dist[previous[id]] << std::endl;
 			dfs_tree.add_edge(back_reference[previous[id]], back_reference[id], dist[id] - dist[previous[id]]);
 			dfs_tree.penalties[back_reference[id]] = penalties[id];
 		}
 	}
 
-	print_vector(visited, "visited");
-	print_vector(dist, "dist");
-	print_vector(milestones_passed, "milestones_passed");
-	print_vector(distance_from_previous_milestone, "distance_from_previous_milestone");
-
 	// dfs over min-path tree to calculate reaches
-	std::vector<double> local_height(visited_count, -1);
-	// dfs_tree.print(std::cout);
 	dfs_tree.dfs_height(0, local_height);
 
 	//cleanup
@@ -241,9 +224,8 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 		distance_from_previous_milestone[id] = 0;
 		dist[id] = -1;
 		back_reference[id] = 0;
+		local_height[i] = -1;
 	}
-
-	print_vector(reaches, "reaches");
 }
 
 void graph::remove_vertices_with_low_reaches(int epsilon) {
@@ -257,8 +239,11 @@ void graph::remove_vertices_with_low_reaches(int epsilon) {
 			final_reaches[i] = reaches[i];
 			std::cout << "Calculated reach of " << i << " : " << reaches[i] << std::endl;
 			delete_node(i);
-			std::vector<weighted_vertex> adjacent = get_adjacent_nodes(i);
+			std::vector<weighted_vertex>& adjacent = get_adjacent_nodes(i);
 			for (std::vector<weighted_vertex>::iterator vertex = adjacent.begin(); vertex != adjacent.end(); ++vertex) {
+				if (vertices_delete_flag[vertex->vert_->id]) {
+					continue;
+				}
 				penalties[vertex->vert_->id] += reaches[i] + vertex->weight;
 			}
 			deleted_count++;
@@ -268,20 +253,6 @@ void graph::remove_vertices_with_low_reaches(int epsilon) {
 	}
 
 	std::cout << "REMOVED nodes with low reach: " << deleted_count << std::endl;
-}
-
-void graph::exact_reaches() {
-	int epsilon = 100000000;
-
-	for (size_t i = 0; i < vertices; ++i) {
-		build_shortest_path_tree(i, epsilon);
-	}
-
-	for (size_t i = 0; i < vertices; ++i) {
-		std::cout << "Calculated reach of " << i << " : " << reaches[i] << std::endl;
-	}
-
-	std::cout << "Done" << std::endl;
 }
 
 void graph::build_reaches() {
@@ -295,13 +266,16 @@ void graph::build_reaches() {
 	milestones_passed = vector<size_t> (vertices, 0);
 	distance_from_previous_milestone = vector<double> (vertices, 0);
 	dist = vector<double> (vertices, -1);
+	local_height = std::vector<double> (vertices, -1);
 
-	int epsilon = 100;
+	int epsilon = 1;
 
 	while (deleted_nodes != vertices) {
 		std::cout << "Epsilon: " << epsilon << std::endl;
 		for (size_t i = 0; i < vertices; ++i) {
-			build_shortest_path_tree(i, epsilon);
+			if (vertices_delete_flag[i] == false) {
+				build_shortest_path_tree(i, epsilon);
+			}
 		}
 		remove_vertices_with_low_reaches(epsilon);
 		epsilon *= 3;

@@ -18,7 +18,7 @@ void tree::print(std::ostream& output) {
 	output << "Tree represenation:" << std::endl;
 	for (uint i = 0; i < vertices; ++i) {
 		output << i << " adjacency list: ";
-		std::vector<light_weighted_vertex> adjacent_nodes = get_adjacent_nodes(i);
+		std::vector<light_weighted_vertex>& adjacent_nodes = get_adjacent_nodes(i);
 		for (std::vector<light_weighted_vertex>::iterator j = adjacent_nodes.begin(); j != adjacent_nodes.end(); ++j) {
 			output << "(" << j->id << "; " <<  j->weight << ") ";			
 		}
@@ -27,7 +27,7 @@ void tree::print(std::ostream& output) {
 }
 
 double tree::dfs_height(uint from, vector<double>& height) {
-	vector<light_weighted_vertex> adjacent = get_adjacent_nodes(from);
+	vector<light_weighted_vertex>& adjacent = get_adjacent_nodes(from);
 	for (vector<light_weighted_vertex>::iterator i = adjacent.begin(); i != adjacent.end(); ++i) {
 		height[from] = height[from] == -1
 			? i->weight + dfs_height(i->id, height)
@@ -36,6 +36,6 @@ double tree::dfs_height(uint from, vector<double>& height) {
 	return height[from] == -1 ? height[from] = penalties[from] : height[from];
 }
 
-std::vector<light_weighted_vertex> tree::get_adjacent_nodes(uint id) {
+std::vector<light_weighted_vertex>& tree::get_adjacent_nodes(uint id) {
 	return adjacency_list[id];
 }

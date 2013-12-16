@@ -11,11 +11,10 @@ public:
 	static graph* construct_from_file(char const* coordinates_file_name, char const* graph_file_name);
 	void add_edge(uint from, uint to, double weight);
 	void print(std::ostream& output);
-	std::vector<weighted_vertex> get_adjacent_nodes(uint id);
+	std::vector<weighted_vertex>& get_adjacent_nodes(uint id);
 	void delete_node(uint id);
 	uint vertices_count();    
 	void build_reaches();
-	void exact_reaches();
 	~graph();
 	vertex_factory* vertex_factory_;
 
@@ -40,8 +39,7 @@ private:
 	std::vector<double> distance_from_previous_milestone;
 	std::vector<double> dist;
 	std::vector<uint> visited;
-
-	std::vector<size_t> dirty;
+	std::vector<double> local_height;
 };
 
 #endif

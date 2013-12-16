@@ -14,7 +14,7 @@ public:
 	double dfs_height(uint from, std::vector<double>& height);
 private:
 	std::vector<std::vector<light_weighted_vertex> > adjacency_list;
-	std::vector<light_weighted_vertex> get_adjacent_nodes(uint id);
+	std::vector<light_weighted_vertex>& get_adjacent_nodes(uint id);
 	uint vertices;
 };
 
