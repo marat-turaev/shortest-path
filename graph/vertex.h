@@ -1,3 +1,6 @@
+#ifndef VERTEX_H
+#define VERTEX_H
+
 typedef unsigned int uint;
 #include <map>
 #include <algorithm>
@@ -62,3 +65,5 @@ public:
 private:
 	std::map<uint, vertex*> data_;
 };
+
+#endif

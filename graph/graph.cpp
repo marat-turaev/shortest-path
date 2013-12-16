@@ -8,21 +8,13 @@
 #include <iostream>
 #include <map>
 #include <stack>
+#include "tree.h"
 using std::vector;
 using std::stack;
 
 template <class T>
-void print_vector(vector<T> v, std::string name) {
+void print_vector(vector<T>& v, std::string name) {
 	return;
-	int counter = 0;
-	for (typename std::vector<T>::iterator i = v.begin(); i != v.end(); ++i) {
-		std::cout << name << " " << counter << " " <<*i << std::endl;
-		counter++;
-	}
-}
-
-template <class T>
-void print_vector2(vector<T> v, std::string name) {
 	int counter = 0;
 	for (typename std::vector<T>::iterator i = v.begin(); i != v.end(); ++i) {
 		std::cout << name << " " << counter << " " <<*i << std::endl;
@@ -45,34 +37,13 @@ std::vector<std::string> split(const std::string &s, char delim) {
     return elems;
 }
 
-
 graph::graph(uint vertices): vertices(vertices) {
-	reaches = std::vector<double>(vertices, -1);
-	penalties = std::vector<double>(vertices, 0);
 	deleted_nodes = 0;
-	cloned = false;
 	vertex_factory_ = new vertex_factory();
 	adjacency_list = std::vector<std::vector<weighted_vertex> >(vertices);
 	for (size_t i = 0; i < vertices; ++i) {
 		adjacency_list[i] = std::vector<weighted_vertex>();
 	}
-	// adjacency_list = new adjacency_list_node*[vertices];
-	// for (size_t i = 0; i < vertices; ++i) {
-	// 	adjacency_list[i] = 0;
-	// }
-	vertices_delete_flag = std::vector<bool>(vertices, false);
-}
-
-graph::graph(graph const & other) {
-	reaches = std::vector<double>(vertices, -1);
-	penalties = std::vector<double>(vertices, 0);
-	deleted_nodes = 0;
-	printf("%s\n", "copied!");
-	cloned = true;
-	//vertex_factory and adjacency_list intentionally left shared due to author's lazyness
-	vertex_factory_ = other.vertex_factory_;
-	adjacency_list = other.adjacency_list;
-	vertices = other.vertices;
 	vertices_delete_flag = std::vector<bool>(vertices, false);
 }
 
@@ -142,7 +113,7 @@ void graph::print(std::ostream& output) {
 std::vector<weighted_vertex> graph::get_adjacent_nodes(uint id) {
 	//assuming no vertices with degree > 10
 	std::vector<weighted_vertex> vec(10);
-	std::vector<weighted_vertex> adjacent_nodes = adjacency_list[id];
+	std::vector<weighted_vertex>& adjacent_nodes = adjacency_list[id];
 	size_t count = 0;
 	for (std::vector<weighted_vertex>::iterator i = adjacent_nodes.begin(); i != adjacent_nodes.end(); ++i) {
 		if (vertices_delete_flag[i->vert_->id] == false) {
@@ -169,7 +140,7 @@ void graph::delete_node(uint id) {
 
 void graph::build_shortest_path_tree(uint from, int epsilon) {
 	if (from % 1000 == 0) std::cout << "build_shortest_path_tree " << from << " " << epsilon << std::endl;
-	vector<uint> visited;
+	size_t visited_count = 0;
 
 	priority_queue<dijkstra_vertex> queue(&vec);
 
@@ -196,8 +167,9 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 		}
 
 		dist[cur.id()] = cur.distance;
-		back_reference[cur.id()] = visited.size();
-		visited.push_back(cur.id());
+		back_reference[cur.id()] = visited_count;
+		visited[visited_count] = cur.id();
+		visited_count++;
 
 		if (milestones_passed[cur.id()] == 2) {
 			continue;
@@ -237,13 +209,14 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 
 	// std::cout << "visited " << visited.size() << std::endl;
 
-	tree dfs_tree(visited.size());
+	tree dfs_tree(visited_count);
 
-	for (std::vector<uint>::iterator i = visited.begin(); i != visited.end(); ++i) {
-		if (*i != from)  {
-			// std::cout << back_reference[previous[*i]] << " " << back_reference[*i] << " " << dist[*i] - dist[previous[*i]] << std::endl;
-			dfs_tree.add_edge(back_reference[previous[*i]], back_reference[*i], dist[*i] - dist[previous[*i]]);
-			dfs_tree.penalties[back_reference[*i]] = penalties[*i];
+	for (int i = 0; i < visited_count; ++i) {
+		uint id = visited[i];
+		if (id != from)  {
+			// std::cout << back_reference[previous[id]] << " " << back_reference[id] << " " << dist[id] - dist[previous[id]] << std::endl;
+			dfs_tree.add_edge(back_reference[previous[id]], back_reference[id], dist[id] - dist[previous[id]]);
+			dfs_tree.penalties[back_reference[id]] = penalties[id];
 		}
 	}
 
@@ -253,15 +226,14 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 	print_vector(distance_from_previous_milestone, "distance_from_previous_milestone");
 
 	// dfs over min-path tree to calculate reaches
-	std::vector<double> local_height(visited.size(), -1);
+	std::vector<double> local_height(visited_count, -1);
 	// dfs_tree.print(std::cout);
 	dfs_tree.dfs_height(0, local_height);
 
-	// print_vector2(local_height, "local_height");
-
 	//cleanup
-	for (std::vector<uint>::iterator i = visited.begin(); i != visited.end(); ++i) {
-		uint id = *i;
+	for (int i = 0; i < visited_count; ++i) {
+		uint id = visited[i];
+		visited[i] = 0;
 		reaches[id] = fmax(reaches[id], fmin(local_height[back_reference[id]], dist[id]));
 		vec[id] = 0;
 		previous[id] = -1;
@@ -282,7 +254,8 @@ void graph::remove_vertices_with_low_reaches(int epsilon) {
 		}
 
 		if (reaches[i] < epsilon) {
-			std::cout << "Final reach of " << i << " : " << reaches[i] << std::endl;
+			final_reaches[i] = reaches[i];
+			std::cout << "Calculated reach of " << i << " : " << reaches[i] << std::endl;
 			delete_node(i);
 			std::vector<weighted_vertex> adjacent = get_adjacent_nodes(i);
 			for (std::vector<weighted_vertex>::iterator vertex = adjacent.begin(); vertex != adjacent.end(); ++vertex) {
@@ -298,75 +271,47 @@ void graph::remove_vertices_with_low_reaches(int epsilon) {
 }
 
 void graph::exact_reaches() {
-	int epsilon = 100;
+	int epsilon = 100000000;
 
 	for (size_t i = 0; i < vertices; ++i) {
 		build_shortest_path_tree(i, epsilon);
 	}
 
 	for (size_t i = 0; i < vertices; ++i) {
-		std::cout << "Final reach of " << i << " : " << reaches[i] << std::endl;
+		std::cout << "Calculated reach of " << i << " : " << reaches[i] << std::endl;
 	}
 
 	std::cout << "Done" << std::endl;
 }
 
 void graph::build_reaches() {
+	reaches = std::vector<double>(vertices, -1);
+	final_reaches = std::vector<double>(vertices, -1);
+	penalties = std::vector<double>(vertices, 0);
 	back_reference = vector<size_t> (vertices, 0);
 	vec = vector<size_t> (vertices, 0);
+	visited = vector<uint> (vertices, 0);
 	previous = vector<size_t> (vertices, -1);
 	milestones_passed = vector<size_t> (vertices, 0);
 	distance_from_previous_milestone = vector<double> (vertices, 0);
 	dist = vector<double> (vertices, -1);
 
-	int epsilon = 1;
+	int epsilon = 100;
 
-	// while (deleted_nodes != vertices) {
+	while (deleted_nodes != vertices) {
 		std::cout << "Epsilon: " << epsilon << std::endl;
 		for (size_t i = 0; i < vertices; ++i) {
 			build_shortest_path_tree(i, epsilon);
 		}
-		// remove_vertices_with_low_reaches(epsilon);
+		remove_vertices_with_low_reaches(epsilon);
 		epsilon *= 3;
-	// }
+	}
+
+	std::cout << "---REACHES---" << std::endl;
+	std::cout.precision(7);
+	for (int i = 0; i < vertices; ++i) {
+		std::cout << final_reaches[i] << std::endl;
+	}
 
 	std::cout << "Done" << std::endl;
-}
-
-tree::tree(uint vertices): vertices(vertices) {
-	penalties = std::vector<double>(vertices, 0);
-	adjacency_list = std::vector<std::vector<light_weighted_vertex> >(vertices);
-	for (size_t i = 0; i < vertices; ++i) {
-		adjacency_list[i] = std::vector<light_weighted_vertex>();
-	}
-}
-
-void tree::add_edge(uint from, uint to, double weight) {
-	adjacency_list[from].push_back(light_weighted_vertex(to, weight));
-}
-
-void tree::print(std::ostream& output) {
-	output << "Tree represenation:" << std::endl;
-	for (uint i = 0; i < vertices; ++i) {
-		output << i << " adjacency list: ";
-		std::vector<light_weighted_vertex> adjacent_nodes = get_adjacent_nodes(i);
-		for (std::vector<light_weighted_vertex>::iterator j = adjacent_nodes.begin(); j != adjacent_nodes.end(); ++j) {
-			output << "(" << j->id << "; " <<  j->weight << ") ";			
-		}
-		output << std::endl;
-	}
-}
-
-double tree::dfs_height(uint from, vector<double>& height) {
-	vector<light_weighted_vertex> adjacent = get_adjacent_nodes(from);
-	for (vector<light_weighted_vertex>::iterator i = adjacent.begin(); i != adjacent.end(); ++i) {
-		height[from] = height[from] == -1
-			? i->weight + dfs_height(i->id, height)
-			: fmax(i->weight + dfs_height(i->id, height), height[from]);
-	}
-	return height[from] == -1 ? height[from] = penalties[from] : height[from];
-}
-
-std::vector<light_weighted_vertex> tree::get_adjacent_nodes(uint id) {
-	return adjacency_list[id];
 }

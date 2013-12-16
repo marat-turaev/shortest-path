@@ -1,6 +1,6 @@
 import os
 
-size = 350
+size = 100
 
 with open('mesh.co', 'w') as co_file:
 	co_file.write("p aux sp co ")
@@ -14,7 +14,6 @@ with open('mesh.co', 'w') as co_file:
 with open('mesh.gr', 'w') as gr_file:
 	for y in xrange(size):
 		for x in xrange(size):
-			# print x, y
 			point = x + y * size
 			point += 1
 			if x != 0:
