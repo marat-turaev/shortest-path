@@ -1,5 +1,4 @@
 #include "tree.h"
-#include <iostream>
 #include <cmath>
 using std::vector;
 

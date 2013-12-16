@@ -2,6 +2,7 @@
 #define TREE_H
 
 #include "vertex.h"
+#include <iostream>
 #include <vector>
 
 class tree {
