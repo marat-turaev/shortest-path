@@ -15,10 +15,13 @@ public:
 	void delete_node(uint id);
 	uint vertices_count();    
 	void build_reaches();
+	void load_reaches(char const* reaches_file_name);
 	~graph();
 	vertex_factory* vertex_factory_;
 
 	void build_shortest_path_tree(uint from, int epsilon);
+	void build_shortest_path_tree2(uint from, int epsilon);
+	std::vector<double> reaches;
 private:
 	graph& operator=(graph& other);
 	uint vertices;
@@ -26,7 +29,6 @@ private:
 	std::vector<bool> vertices_delete_flag;
 	std::vector<std::vector<weighted_vertex> > adjacency_list;
 
-	std::vector<double> reaches;
 	std::vector<double> final_reaches;
 	std::vector<double> penalties;
 	void remove_vertices_with_low_reaches(int epsilon);

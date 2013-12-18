@@ -5,8 +5,8 @@
 #include <fstream>
 #include <ctime>
 
-const uint from = 123;
-const uint to = 2200000;
+const uint from = 109;
+const uint to = 175;
 
 void print_path(std::vector<boost::optional<uint> >& v) {
 	std::ofstream vertices("vertices.txt");
@@ -31,11 +31,18 @@ int main() {
 	// graph* g = graph::construct_from_file("input/mesh.co", "input/mesh.gr");
 	// graph* g = graph::construct_from_file("input/circle.co", "input/circle.gr");
 	// graph* g = graph::construct_from_file("input/ultralight.co", "input/ultralight.gr");
-	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
-	graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
-	// g->build_shortest_path_tree(0, 1);
-	// g->exact_reaches();
+	graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
+	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
 	g->build_reaches();
+	// g->load_reaches("reaches.re");
+
+
+	// vector<boost::optional<uint> > previous1(g->vertices_count(), boost::optional<uint>());
+	// std::cout << dijkstra(g).shortest_path(from, to, previous1) << std::endl;
+	// print_path(previous1);
+
+
+	// std::cout << g->reaches[0] << " " << g->reaches[10] << std::endl;
 	return 0;
 }
 

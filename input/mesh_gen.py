@@ -1,6 +1,6 @@
 import os
 
-size = 100
+size = 50
 
 with open('mesh.co', 'w') as co_file:
 	co_file.write("p aux sp co ")

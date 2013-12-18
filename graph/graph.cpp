@@ -139,17 +139,17 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 		dijkstra_vertex cur = queue.top();
 		queue.pop();
 
-		if (milestones_passed[cur.id()] == 0 ) {
-			if (distance_from_previous_milestone[cur.id()] > epsilon) {
-				distance_from_previous_milestone[cur.id()] = 0;
-				milestones_passed[cur.id()]++;
-			}
-		}
-
-		if (milestones_passed[cur.id()] == 1 ) {
-			if (distance_from_previous_milestone[cur.id()] + penalties[cur.id()] > epsilon) {
-				distance_from_previous_milestone[cur.id()] = 0;
-				milestones_passed[cur.id()]++;
+		if (cur.id() != from) {
+			if (milestones_passed[cur.id()] == 0 ) {
+				if (distance_from_previous_milestone[cur.id()] > epsilon) {
+					distance_from_previous_milestone[cur.id()] = 0;
+					milestones_passed[cur.id()]++;
+				}
+			} else {
+				if (distance_from_previous_milestone[cur.id()] + penalties[cur.id()] > epsilon) {
+					distance_from_previous_milestone[cur.id()] = 0;
+					milestones_passed[cur.id()]++;
+				}
 			}
 		}
 
@@ -204,11 +204,115 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 		uint id = visited[i];
 		if (id != from)  {
 			dfs_tree.add_edge(back_reference[previous[id]], back_reference[id], distance[id] - distance[previous[id]]);
-			dfs_tree.penalties[back_reference[id]] = penalties[id];
 		}
+		dfs_tree.penalties[back_reference[id]] = penalties[id];
 	}
 
 	dfs_tree.dfs_height(0, local_height);
+
+	for (int i = 0; i < visited_count; ++i) {
+		uint id = visited[i];
+		visited[i] = 0;
+		reaches[id] = fmax(reaches[id], fmin(local_height[back_reference[id]], distance[id]));
+		vec[id] = 0;
+		previous[id] = -1;
+		milestones_passed[id] = 0;
+		distance_from_previous_milestone[id] = 0;
+		distance[id] = -1;
+		back_reference[id] = 0;
+		local_height[i] = -1;
+	}
+}
+
+void graph::build_shortest_path_tree2(uint from, int epsilon) {
+	if (from % 1000 == 0) std::cout << "build_shortest_path_tree " << from << " " << epsilon << std::endl;
+	size_t visited_count = 0;
+
+	priority_queue<dijkstra_vertex> queue(&vec);
+
+	dijkstra_vertex from_vertex(vertex_factory_->get_vertex(from), penalties[from]);
+	distance_from_previous_milestone[from] = penalties[from];
+	queue.push(from_vertex);
+
+	while (!queue.empty()) {
+		dijkstra_vertex cur = queue.top();
+		queue.pop();
+
+		if (cur.id() != from) {
+			if (milestones_passed[cur.id()] == 0 ) {
+				if (distance_from_previous_milestone[cur.id()] > epsilon) {
+					distance_from_previous_milestone[cur.id()] = 0;
+					milestones_passed[cur.id()]++;
+				}
+			} else {
+				if (distance_from_previous_milestone[cur.id()] + penalties[cur.id()] > epsilon) {
+					distance_from_previous_milestone[cur.id()] = 0;
+					milestones_passed[cur.id()]++;
+				}
+			}
+		}
+
+		distance[cur.id()] = cur.distance;
+		back_reference[cur.id()] = visited_count;
+		visited[visited_count] = cur.id();
+		visited_count++;
+
+		if (milestones_passed[cur.id()] == 2) {
+			continue;
+		}
+
+		vector<weighted_vertex>& adjacent = get_adjacent_nodes(cur.id());
+
+		for (vector<weighted_vertex>::iterator i = adjacent.begin(); i != adjacent.end(); ++i) {
+			if (vertices_delete_flag[i->vert_->id]) {
+				continue;
+			}
+
+			if (distance[i->vert_->id] != -1) {
+				continue;
+			}
+
+			if (vec[i->vert_->id] == 0) {
+				dijkstra_vertex temp(i->vert_, i->weight + cur.distance);
+
+				milestones_passed[i->vert_->id] = milestones_passed[cur.id()];
+				distance_from_previous_milestone[i->vert_->id] = i->weight + distance_from_previous_milestone[cur.id()];
+				previous[i->vert_->id] = cur.id();
+
+				queue.push(temp);
+				continue;
+			}
+
+			dijkstra_vertex temp = queue.at(vec[i->vert_->id]);
+
+			if (temp.distance > i->weight + cur.distance) {
+				temp.update_distance(i->weight + cur.distance);
+
+				milestones_passed[i->vert_->id] = milestones_passed[cur.id()];
+				distance_from_previous_milestone[i->vert_->id] = i->weight + distance_from_previous_milestone[cur.id()];
+				previous[i->vert_->id] = cur.id();
+
+				queue.change_key(temp);
+			}
+		}	
+	}
+
+	tree dfs_tree(visited_count);
+
+	for (int i = 0; i < visited_count; ++i) {
+		uint id = visited[i];
+		if (id != from)  {
+			dfs_tree.add_edge(back_reference[previous[id]], back_reference[id], distance[id] - distance[previous[id]]);
+		}
+		dfs_tree.penalties[back_reference[id]] = penalties[id];
+	}
+
+	dfs_tree.dfs_height(0, local_height);
+	dfs_tree.print(std::cout);
+
+	std::cout << distance[111] << std::endl;
+	std::cout << local_height[back_reference[111]] << std::endl;
+	std::cout << penalties[175] << std::endl;
 
 	for (int i = 0; i < visited_count; ++i) {
 		uint id = visited[i];
@@ -240,7 +344,7 @@ void graph::remove_vertices_with_low_reaches(int epsilon) {
 				if (vertices_delete_flag[vertex->vert_->id]) {
 					continue;
 				}
-				penalties[vertex->vert_->id] += reaches[i] + vertex->weight;
+				penalties[vertex->vert_->id] += fmax(penalties[vertex->vert_->id], reaches[i] + vertex->weight);
 			}
 			deleted_count++;
 		}
@@ -264,10 +368,8 @@ void graph::build_reaches() {
 	distance = vector<double> (vertices, -1);
 	local_height = std::vector<double> (vertices, -1);
 
-	int epsilon = 1000;
-
-	while (deleted_nodes != vertices) {
-		std::cout << "Epsilon: " << epsilon << std::endl;
+	int epsilon = 1;
+	while (epsilon != 6561) {
 		for (size_t i = 0; i < vertices; ++i) {
 			if (vertices_delete_flag[i] == false) {
 				build_shortest_path_tree(i, epsilon);
@@ -277,11 +379,33 @@ void graph::build_reaches() {
 		epsilon *= 3;
 	}
 
-	std::cout << "---REACHES---" << std::endl;
-	std::cout.precision(15);
-	for (int i = 0; i < vertices; ++i) {
-		std::cout << final_reaches[i] << std::endl;
-	}
+	build_shortest_path_tree2(175, epsilon);
 
-	std::cout << "Done" << std::endl;
+	// int epsilon = 1;
+	// while (deleted_nodes != vertices) {
+	// 	std::cout << "Epsilon: " << epsilon << std::endl;
+	// 	for (size_t i = 0; i < vertices; ++i) {
+	// 		if (vertices_delete_flag[i] == false) {
+	// 			build_shortest_path_tree(i, epsilon);
+	// 		}
+	// 	}
+	// 	remove_vertices_with_low_reaches(epsilon);
+	// 	epsilon *= 3;
+	// }
+
+	// std::cout << "---REACHES---" << std::endl;
+	// std::cout.precision(15);
+	// for (int i = 0; i < vertices; ++i) {
+	// 	std::cout << final_reaches[i] << std::endl;
+	// }
+
+	// std::cout << "Done" << std::endl;
+}
+
+void graph::load_reaches(char const* reaches_file_name) {
+	std::ifstream reaches_file(reaches_file_name);
+	for (int i = 0; i < vertices; ++i) {
+		reaches_file >> reaches[i];
+	}
+	reaches_file.close();	
 }
