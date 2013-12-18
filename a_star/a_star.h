@@ -9,6 +9,7 @@ struct a_star {
 public:
 	a_star(graph* graph);	
 	double shortest_path(uint from, uint to, vector<boost::optional<uint> >& previous);
+	double shortest_path_with_reaches(uint from, uint to, vector<boost::optional<uint> >& previous);
 	
 private:
 	double heuristic(vertex* current, vertex* destination);

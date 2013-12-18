@@ -82,8 +82,6 @@ double dijkstra::shortest_path_with_reaches(uint from, uint to, vector<boost::op
 			}
 
 			if (graph_->reaches[i->vert_->id] < fmin(cur.distance + i->weight, heuristic(i->vert_, to_vertex))) {
-				std::cout << "pruned " << graph_->reaches[i->vert_->id] << std::endl;
-				std::cout << "pruned " << i->vert_->id << std::endl;
 				continue;
 			}
 

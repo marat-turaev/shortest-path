@@ -26,47 +26,26 @@ void print_path(std::vector<boost::optional<uint> >& v) {
 }
 
 int main() {
-	// graph* g = graph::construct_from_file("input/USA-road-d.NY.mid.co", "input/USA-road-d.NY.mid.gr");
+	graph* g = graph::construct_from_file("input/USA-road-d.NY.mid.co", "input/USA-road-d.NY.mid.gr");
 	// graph* g = graph::construct_from_file("input/USA-road-d.NY.small.co", "input/USA-road-d.NY.small.gr");
 	// graph* g = graph::construct_from_file("input/mesh.co", "input/mesh.gr");
 	// graph* g = graph::construct_from_file("input/circle.co", "input/circle.gr");
 	// graph* g = graph::construct_from_file("input/ultralight.co", "input/ultralight.gr");
 	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
-	graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
-	g->build_reaches();
-	// g->load_reaches("reaches.re");
+	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
+	// g->build_reaches();
+	g->load_reaches("reaches.re");
 
 
-	// vector<boost::optional<uint> > previous1(g->vertices_count(), boost::optional<uint>());
-	// std::cout << a_star(g).shortest_path(from, to, previous1) << std::endl;
-	// std::cout << dijkstra(g).shortest_path(from, to, previous1) << std::endl;
-	// std::cout << dijkstra(g).shortest_path_with_reaches(from, to, previous1) << std::endl;
-	// print_path(previous1);
-
-
-	// std::cout << g->reaches[0] << " " << g->reaches[10] << std::endl;
-	return 0;
-}
-
-void test() {
-	graph* g = graph::construct_from_file("input/USA-road-d.USA.co", "input/USA-road-d.USA.gr");
-	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
-	// g->print(std::cout);
-	std::cout.precision(15);
-
-	// vector<boost::optional<uint> > previous1(g->vertices_count(), boost::optional<uint>());
+	vector<boost::optional<uint> > previous(g->vertices_count(), boost::optional<uint>());
 	clock_t begin = clock();
-	// std::cout << dijkstra(g).shortest_path(from, to, previous1) << std::endl;
+	// std::cout << a_star(g).shortest_path(from, to, previous) << std::endl;
+	std::cout << a_star(g).shortest_path_with_reaches(from, to, previous) << std::endl;
+	// std::cout << dijkstra(g).shortest_path(from, to, previous) << std::endl;
+	// std::cout << dijkstra(g).shortest_path_with_reaches(from, to, previous) << std::endl;
 	clock_t end = clock();
-	// std::cout << "Time: " <<(end - begin) / (double)CLOCKS_PER_SEC << std::endl;
-
-	// print_path(previous1);
-
-	vector<boost::optional<uint> > previous2(g->vertices_count(), boost::optional<uint>());
-	begin = clock();
-	std::cout << a_star(g).shortest_path(from, to, previous2) << std::endl;
-	end = clock();
-	std::cout << "Time: " << (end - begin) / (double)CLOCKS_PER_SEC << std::endl;
-
-	print_path(previous2);
+	std::cout << "Time: " <<(end - begin) / (double)CLOCKS_PER_SEC << std::endl;
+	print_path(previous);
+	
+	return 0;
 }
