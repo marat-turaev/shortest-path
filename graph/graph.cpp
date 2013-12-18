@@ -125,14 +125,29 @@ void graph::delete_node(uint id) {
 	deleted_nodes++;
 }
 
+inline double average_of_three(double a, double b, double c) {
+	if (a > b) {
+		if (c > a) {
+			return a;
+		} else {
+			return fmax(c, b);
+		}
+	} else {
+		if (c > b) {
+			return b;
+		} else {
+			return fmax(c, a);
+		}
+	}
+}
+
 void graph::build_shortest_path_tree(uint from, int epsilon) {
 	if (from % 1000 == 0) std::cout << "build_shortest_path_tree " << from << " " << epsilon << std::endl;
 	size_t visited_count = 0;
 
 	priority_queue<dijkstra_vertex> queue(&vec);
 
-	dijkstra_vertex from_vertex(vertex_factory_->get_vertex(from), penalties[from]);
-	distance_from_previous_milestone[from] = penalties[from];
+	dijkstra_vertex from_vertex(vertex_factory_->get_vertex(from), 0);
 	queue.push(from_vertex);
 
 	while (!queue.empty()) {
@@ -140,16 +155,9 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 		queue.pop();
 
 		if (cur.id() != from) {
-			if (milestones_passed[cur.id()] == 0 ) {
-				if (distance_from_previous_milestone[cur.id()] > epsilon) {
-					distance_from_previous_milestone[cur.id()] = 0;
-					milestones_passed[cur.id()]++;
-				}
-			} else {
-				if (distance_from_previous_milestone[cur.id()] + penalties[cur.id()] > epsilon) {
-					distance_from_previous_milestone[cur.id()] = 0;
-					milestones_passed[cur.id()]++;
-				}
+			if (distance_from_previous_milestone[cur.id()] > epsilon) {
+				distance_from_previous_milestone[cur.id()] = 0;
+				milestones_passed[cur.id()]++;
 			}
 		}
 
@@ -158,7 +166,7 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 		visited[visited_count] = cur.id();
 		visited_count++;
 
-		if (milestones_passed[cur.id()] == 2) {
+		if (milestones_passed[cur.id()] == 3) {
 			continue;
 		}
 
@@ -213,7 +221,7 @@ void graph::build_shortest_path_tree(uint from, int epsilon) {
 	for (int i = 0; i < visited_count; ++i) {
 		uint id = visited[i];
 		visited[i] = 0;
-		reaches[id] = fmax(reaches[id], fmin(local_height[back_reference[id]], distance[id]));
+		reaches[id] = fmax(reaches[id], average_of_three(local_height[back_reference[id]], distance[id] + penalties[from], penalties[id]));
 		vec[id] = 0;
 		previous[id] = -1;
 		milestones_passed[id] = 0;
@@ -240,7 +248,7 @@ void graph::remove_vertices_with_low_reaches(int epsilon) {
 				if (vertices_delete_flag[vertex->vert_->id]) {
 					continue;
 				}
-				penalties[vertex->vert_->id] += fmax(penalties[vertex->vert_->id], reaches[i] + vertex->weight);
+				penalties[vertex->vert_->id] = fmax(penalties[vertex->vert_->id], reaches[i] + vertex->weight);
 			}
 			deleted_count++;
 		}
@@ -264,7 +272,7 @@ void graph::build_reaches() {
 	distance = vector<double> (vertices, -1);
 	local_height = std::vector<double> (vertices, -1);
 
-	int epsilon = 10000000;
+	int epsilon = 1000;
 	while (deleted_nodes != vertices) {
 		std::cout << "Epsilon: " << epsilon << std::endl;
 		for (size_t i = 0; i < vertices; ++i) {
