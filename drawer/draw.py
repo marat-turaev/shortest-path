@@ -1,7 +1,7 @@
 from graph_tool.all import *
 # filename = "USA-road-d.NY.mid"
-# filename = "USA-road-d.NY.small"
-filename = "mesh"
+filename = "USA-road-d.NY.small"
+# filename = "mesh"
 # filename = "circle"
 # filename = "light"
 # filename = "USA-road-d.NY"
@@ -27,10 +27,10 @@ with open('../input/' + filename + ".co", 'r') as f:
             pos[current_vertice] = (int(words[2]), int(words[3]))
             vertices_color[current_vertice] = [0.5, 0, 0, 1];
 
-# with open('../vertices.txt', 'r') as f:
-#     for line in f:
-#         current_vertice = g.vertex(int(line))
-#         vertices_color[current_vertice] = [0, 1, 0, 1]
+with open('../vertices.txt', 'r') as f:
+    for line in f:
+        current_vertice = g.vertex(int(line))
+        vertices_color[current_vertice] = [0, 1, 0, 1]
 
 print "Edges processing"
 with open('../input/' + filename + ".gr", 'r') as f:
@@ -45,12 +45,12 @@ with open('../input/' + filename + ".gr", 'r') as f:
             edge_color[current_edge] = [0.179, 0.203,0.210, 0.8]
 
 
-# with open('../path.txt', 'r') as f:
-#     for line in f:
-#         words = line.split()
-#         current_edge = g.edge(int(words[0]), int(words[1]))
-#         pen[current_edge] = 10
-#         edge_color[current_edge] = [0, 0, 1, 1]
+with open('../path.txt', 'r') as f:
+    for line in f:
+        words = line.split()
+        current_edge = g.edge(int(words[0]), int(words[1]))
+        pen[current_edge] = 10
+        edge_color[current_edge] = [0, 0, 1, 1]
 
 
 print "Drawing processing"

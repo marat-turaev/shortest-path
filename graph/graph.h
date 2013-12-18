@@ -20,7 +20,6 @@ public:
 	vertex_factory* vertex_factory_;
 
 	void build_shortest_path_tree(uint from, int epsilon);
-	void build_shortest_path_tree2(uint from, int epsilon);
 	std::vector<double> reaches;
 private:
 	graph& operator=(graph& other);

@@ -5,8 +5,8 @@
 #include <fstream>
 #include <ctime>
 
-const uint from = 109;
-const uint to = 175;
+const uint from = 300;
+const uint to = 400;
 
 void print_path(std::vector<boost::optional<uint> >& v) {
 	std::ofstream vertices("vertices.txt");
@@ -26,12 +26,12 @@ void print_path(std::vector<boost::optional<uint> >& v) {
 }
 
 int main() {
-	// graph* g = graph::construct_from_file("input/USA-road-d.NY.mid.co", "input/USA-road-d.NY.mid.gr");
+	graph* g = graph::construct_from_file("input/USA-road-d.NY.mid.co", "input/USA-road-d.NY.mid.gr");
 	// graph* g = graph::construct_from_file("input/USA-road-d.NY.small.co", "input/USA-road-d.NY.small.gr");
 	// graph* g = graph::construct_from_file("input/mesh.co", "input/mesh.gr");
 	// graph* g = graph::construct_from_file("input/circle.co", "input/circle.gr");
 	// graph* g = graph::construct_from_file("input/ultralight.co", "input/ultralight.gr");
-	graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
+	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
 	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
 	g->build_reaches();
 	// g->load_reaches("reaches.re");
@@ -39,6 +39,7 @@ int main() {
 
 	// vector<boost::optional<uint> > previous1(g->vertices_count(), boost::optional<uint>());
 	// std::cout << dijkstra(g).shortest_path(from, to, previous1) << std::endl;
+	// std::cout << dijkstra(g).shortest_path_with_reaches(from, to, previous1) << std::endl;
 	// print_path(previous1);
 
 
