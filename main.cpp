@@ -5,8 +5,8 @@
 #include <fstream>
 #include <ctime>
 
-const uint from = 10020;
-const uint to = 22000;
+const uint from = 123;
+const uint to = 220000;
 
 void print_path(std::vector<boost::optional<uint> >& v) {
 	std::ofstream vertices("vertices.txt");
@@ -26,26 +26,26 @@ void print_path(std::vector<boost::optional<uint> >& v) {
 }
 
 int main() {
-	graph* g = graph::construct_from_file("input/USA-road-d.NY.mid.co", "input/USA-road-d.NY.mid.gr");
+	// graph* g = graph::construct_from_file("input/USA-road-d.NY.mid.co", "input/USA-road-d.NY.mid.gr");
 	// graph* g = graph::construct_from_file("input/USA-road-d.NY.small.co", "input/USA-road-d.NY.small.gr");
 	// graph* g = graph::construct_from_file("input/mesh.co", "input/mesh.gr");
 	// graph* g = graph::construct_from_file("input/circle.co", "input/circle.gr");
 	// graph* g = graph::construct_from_file("input/ultralight.co", "input/ultralight.gr");
 	// graph* g = graph::construct_from_file("input/light.co", "input/light.gr");
-	// graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
+	graph* g = graph::construct_from_file("input/USA-road-d.NY.co", "input/USA-road-d.NY.gr");
 	// g->build_reaches();
 	g->load_reaches("reaches.re");
 
 
 	vector<boost::optional<uint> > previous(g->vertices_count(), boost::optional<uint>());
 	clock_t begin = clock();
-	// std::cout << a_star(g).shortest_path(from, to, previous) << std::endl;
-	std::cout << a_star(g).shortest_path_with_reaches(from, to, previous) << std::endl;
+	std::cout << a_star(g).shortest_path(from, to, previous) << std::endl;
+	// std::cout << a_star(g).shortest_path_with_reaches(from, to, previous) << std::endl;
 	// std::cout << dijkstra(g).shortest_path(from, to, previous) << std::endl;
 	// std::cout << dijkstra(g).shortest_path_with_reaches(from, to, previous) << std::endl;
 	clock_t end = clock();
 	std::cout << "Time: " <<(end - begin) / (double)CLOCKS_PER_SEC << std::endl;
 	print_path(previous);
-	
+
 	return 0;
 }

@@ -1,0 +1,270 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+% \documentclass{beamer}
+\documentclass[10pt, pdf,utf8,russian]{beamer}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\DeclareUnicodeCharacter{00A0}{ }
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Поиск путей на графе дорог]{Поиск путей на графе дорог} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Марат Тураев}
+
+\institute[СПбАУ] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{Руководитель: Алексей Гуревич\\СПбАУ МИТ SE}
+\date{19 Декабрь 2013} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+% \begin{frame}
+% \frametitle{Overview} % Table of contents slide, comment this block out to remove it
+% \tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+% \end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Постановка задачи и решения}
+Поиск кратчаших путей на графе дорог:
+\begin{itemize}
+	\item Вершины -- перекрестки, ребра -- дороги
+	\item США: 26м вершин и 58м ребер
+	\item Ориентированный граф
+	\item Длина ребер (длина дорог) положительна
+	\item Задача в поиске расстояния между парой вершин
+\end{itemize}
+Алгоритмы:
+\begin{itemize}
+	\item Dijkstra
+	\item A*
+	\item Эвристические алгоритмы
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Нью-Йорк 264346 вершин, 733846 ребер.}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{ny_empty.png}
+\end{center} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Алгоритм Дейкстры}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{dijkstra_big.png}
+\end{center} 
+\end{frame}
+
+\begin{frame}
+\frametitle{А*}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{a_star_big.png}
+\end{center} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Reaches}
+Когда ищем путь из Санкт-Петербурга в Москву, не стоит рассмотривать местные дороги в Твери
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{reaches_motivation.png}
+\end{center} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Reaches}
+\begin{itemize}
+	\item 
+		Пусть есть $P$ путь из $s$ в $t$:
+		\begin{center}
+		\includegraphics[width=0.7\textwidth]{reaches_img.png}
+		\end{center}
+	\item Reach $v$ на этом пути $r(v,P) = min(dist(s,v), dist(v,t))$
+	\item Reach $v$ на всем графе $r(v) = max(r(v,P))$, по всем кратчайшим путям $P$
+	\item Наблюдение:
+		\begin{itemize}
+			\item Вершина с большим reach находится на каком-то длинном кратчайшем пути
+			\item Вершины на магистралях имеют большой reach
+			\item Вершины на местных дорогах маленький reach
+		\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Как использовать Reach?}
+Модифицируем известные алгоритмы
+\begin{itemize}
+	\item 
+		Отбросим вершину $w$ если $r(w)<min(d(s,v)+l(v,w),LB(w,t))$:
+		\begin{center}
+		\includegraphics[width=0.7\textwidth]{reaches_img2.png}
+		\end{center}
+	\item 
+		$LB(w,t)$ -- нижняя граница на оставшийся путь, например Евклидово расстояние
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Как посчитать Reach?}
+Запустим $|V|$ раз Дейкстру
+\begin{itemize}
+	\item 
+		\begin{center}
+		\includegraphics[width=0.6\textwidth]{tree_img.png}
+		\end{center}
+		$r_s(v) = min(depth_s(v),height_s(v))$
+	\item Предпосчет 27 часов на графе Нью-Йорка, на больших графах легко не дождаться
+	\item Нужен способ быстрее
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Как посчитать Reach?}
+\begin{itemize}
+	\item 
+		Будем считать не истинный reach, а верхнюю границу
+	\item 
+		$r(v) \geq \epsilon \implies \exists P (r(v,P) \geq \epsilon)$
+	\item 
+		Если $r'(v) < \epsilon$ -- верхняя граница найдена ($r(v) = r'(v)$)
+	\item 
+		Если $r'(v) \geq \epsilon$ -- про верхнюю границу нельзя сказать ничего ($r(v) \geq r'(v)$)
+		\begin{center}
+			\includegraphics[width=0.7\textwidth]{eps_img.png}
+		\end{center} 
+\end{itemize}
+Строим частичные деревья минимальных путей\\
+Время предподсчета 3ч20м.
+\end{frame}
+
+\begin{frame}
+\frametitle{Dijkstra + Reach}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{dijkstra_reaches_big.png}
+\end{center} 
+\end{frame}
+
+\begin{frame}
+\frametitle{А* + Reach}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{a_star_reaches_big.png}
+\end{center} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Результаты}
+	\begin{tabular}{|c|c|c|} Алгоритм & Время (секунды) & Просмотрено вершин \\
+		\hline
+		А*&0.026&43166\\
+		А* + Reaches&0.006&6683\\
+		Dijkstra&0.099&194748\\
+		Dijkstra + Reaches&0.016&24532\\
+	\end{tabular}
+\end{frame}
+
+\begin{frame} 
+\frametitle{Какие навыки получены?}
+\begin{itemize}
+	\item Разработка требовательных к скорости выполнения программ
+		\begin{itemize}
+			\item google perftools
+		\end{itemize}
+	\item Алгоритмы препроцессинга для задачи поиска путей
+	\item Методы и библиотеки отрисовки графов
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Huge{\centerline{Вопросы?}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document} 

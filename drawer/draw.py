@@ -1,10 +1,10 @@
 from graph_tool.all import *
-filename = "USA-road-d.NY.mid"
+# filename = "USA-road-d.NY.mid"
 # filename = "USA-road-d.NY.small"
 # filename = "mesh"
 # filename = "circle"
 # filename = "light"
-# filename = "USA-road-d.NY"
+filename = "USA-road-d.NY"
 # filename = "USA-road-d.USA"
 
 vertices_count = 0
@@ -54,5 +54,5 @@ with open('../path.txt', 'r') as f:
 
 
 print "Drawing processing"
-graph_draw(g, pos=pos, edge_color = edge_color, edge_pen_width = pen, vertex_fill_color=vertices_color, output="out.png", output_size=(4000,4000))
+graph_draw(g, pos=pos, edge_color = edge_color, edge_pen_width = pen, vertex_fill_color=vertices_color, output="out.png", output_size=(1500,1500))
 print "Done"
